@@ -28,10 +28,17 @@ init_command() {
         usage
     fi
 
-    if [ ! -e "package-lock.json" ]; then
-        if ! npm i; then
-            echo "Your system does not have npm installed. Please make sure you've installed Node.js on your system."
-            exit 1
+    if [ ! -d "node_modules" ]; then
+        if [ -e "package-lock.json" ]; then
+            if ! npm ci; then
+                echo "Your system does not have npm installed. Please make sure you've installed Node.js on your system."
+                exit 1
+            fi
+        else
+            if ! npm i; then
+                echo "Your system does not have npm installed. Please make sure you've installed Node.js on your system."
+                exit 1
+            fi
         fi
     fi
 

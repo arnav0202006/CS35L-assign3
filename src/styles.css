@@ -3,8 +3,8 @@
 }
 
 body {
-  font-family: sans-serif;
-  margin: 20px;
+  background: #f8f9fa;
+  margin: 0;
   padding: 0;
 }
 
@@ -46,14 +46,12 @@ ul {
   padding-inline-start: 20px;
 }
 
-* {
-  box-sizing: border-box;
+.greeting {
+  color: #2774ae;
 }
 
-body {
-  font-family: sans-serif;
-  margin: 20px;
-  padding: 0;
+.starter-card {
+  max-width: 42rem;
 }
 
 .square {
