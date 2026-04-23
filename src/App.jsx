@@ -16,7 +16,7 @@ export default function Board() {
 
   const [xIsNext, setXIsNext] = useState(true);
   const [squares, setSquares] = useState(Array(9).fill(null));
-  const [movingSquare, setMovingSquare] = useState(null);
+  const [selectedSquare, setSelectedSquare] = useState(null);
 
   let xCount = 0;
   let oCount = 0;
@@ -37,13 +37,13 @@ export default function Board() {
 
     if (xCount === 3 && xIsNext){
       if (squares[i] === "X"){
-        setMovingSquare(i);
+        setSelectedSquare(i);
         return;
       }
-      if (movableSquare(squares, movingSquare, i, "X")){
-        nextSquares[i] = squares[movingSquare];
-        nextSquares[movingSquare] = squares[i];
-        setMovingSquare(null);
+      if (movableSquare(squares, selectedSquare, i, "X")){
+        nextSquares[i] = squares[selectedSquare];
+        nextSquares[selectedSquare] = squares[i];
+        setSelectedSquare(null);
         setSquares(nextSquares);
         setXIsNext(!xIsNext);
       }
@@ -52,12 +52,12 @@ export default function Board() {
 
     if (oCount === 3 && !xIsNext){
       if (squares[i] === "O"){
-        setMovingSquare(i);
+        setSelectedSquare(i);
       }
-      if (movableSquare(squares, movingSquare, i, "O")){
-        nextSquares[i] = squares[movingSquare];
-        nextSquares[movingSquare] = squares[i];
-        setMovingSquare(null);
+      if (movableSquare(squares, selectedSquare, i, "O")){
+        nextSquares[i] = squares[selectedSquare];
+        nextSquares[selectedSquare] = squares[i];
+        setSelectedSquare(null);
         setSquares(nextSquares);
         setXIsNext(!xIsNext);
       }
@@ -80,7 +80,7 @@ export default function Board() {
   } else {
     status = "Next player: " + (xIsNext ? "X" : "O");
     if ((xIsNext && xCount === 3) || (!xIsNext && oCount === 3)){
-      status += " Selected Square: " + movingSquare;
+      status += " Selected Square: " + selectedSquare;
     }
   }
 
