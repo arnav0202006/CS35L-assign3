@@ -4,48 +4,6 @@ import { useState } from 'react';
 
 const { Badge, Button, Card } = ReactBootstrap
 
-export default function Game() {
-  const [history, setHistory] = useState([Array(9).fill(null)]);
-  const [currentMove, setCurrentMove] = useState(0);
-  const xIsNext = currentMove % 2 === 0;
-  const currentSquares = history[currentMove];
-
-  function handlePlay(nextSquares) {
-    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
-    setHistory(nextHistory);
-    setCurrentMove(nextHistory.length - 1);
-  }
-
-  function jumpTo(nextMove) {
-    setCurrentMove(nextMove);
-  }
-
-  const moves = history.map((squares, move) => {
-    let description;
-    if (move > 0) {
-      description = 'Go to move #' + move;
-    } else {
-      description = 'Go to game start';
-    }
-    return (
-      <li key={move}>
-        <button onClick={() => jumpTo(move)}>{description}</button>
-      </li>
-    );
-  });
-
-  return (
-    <div className="game">
-      <div className="game-board">
-      <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
-      </div>
-      <div className="game-info">
-        <ol>{ moves }</ol>
-      </div>
-    </div>
-  );
-}
-
 function Square({ value, onSquareClick }) {
   return (
     <button className="square" onClick={onSquareClick}>
@@ -54,7 +12,66 @@ function Square({ value, onSquareClick }) {
   );
 }
 
-function Board({ xIsNext, squares, onPlay }) {
+export default function Board() {
+
+  const [xIsNext, setXIsNext] = useState(true);
+  const [squares, setSquares] = useState(Array(9).fill(null));
+  const [movingSquare, setMovingSquare] = useState(null);
+
+  let xCount = 0;
+  let oCount = 0;
+  for (let i = 0; i < squares.length; i++) {
+    if (squares[i] === 'X'){
+      xCount++;
+    }
+    else if (squares[i] === 'O'){
+      oCount++;
+    }
+  }
+
+  function handleClick(i) {
+    if (calculateWinner(squares)) {
+      return;
+    }
+    const nextSquares = squares.slice();
+
+    if (xCount === 3 && xIsNext){
+      if (squares[i] === "X"){
+        setMovingSquare(i);
+        return;
+      }
+      if (movableSquare(squares, movingSquare, i, "X")){
+        nextSquares[i] = squares[movingSquare];
+        nextSquares[movingSquare] = squares[i];
+        setMovingSquare(null);
+        setSquares(nextSquares);
+        setXIsNext(!xIsNext);
+      }
+      return;
+    }
+
+    if (oCount === 3 && !xIsNext){
+      if (squares[i] === "O"){
+        setMovingSquare(i);
+      }
+      if (movableSquare(squares, movingSquare, i, "O")){
+        nextSquares[i] = squares[movingSquare];
+        nextSquares[movingSquare] = squares[i];
+        setMovingSquare(null);
+        setSquares(nextSquares);
+        setXIsNext(!xIsNext);
+      }
+      return;
+    }
+
+    if (squares[i] !== null){
+      return;
+    }
+
+    nextSquares[i] = xIsNext ? "X" : "O";
+    setSquares(nextSquares);
+    setXIsNext(!xIsNext);
+  }
 
   const winner = calculateWinner(squares);
   let status;
@@ -62,19 +79,9 @@ function Board({ xIsNext, squares, onPlay }) {
     status = "Winner: " + winner;
   } else {
     status = "Next player: " + (xIsNext ? "X" : "O");
-  }
-
-  function handleClick(i) {
-    if (squares[i] || calculateWinner(squares)) {
-      return;
+    if ((xIsNext && xCount === 3) || (!xIsNext && oCount === 3)){
+      status += " Selected Square: " + movingSquare;
     }
-    const nextSquares = squares.slice();
-    if (xIsNext) {
-      nextSquares[i] = "X";
-    } else {
-      nextSquares[i] = "O";
-    }
-    onPlay(nextSquares);
   }
 
   return (
@@ -97,6 +104,30 @@ function Board({ xIsNext, squares, onPlay }) {
       </div>
     </>
   );
+}
+
+function movableSquare(squares, startSquare, endSquare, currPlayer){
+  const movTable = [
+    [1, 3, 4],
+    [0, 2, 3, 4, 5],
+    [1, 4, 5],
+    [0, 1, 4, 6, 7],
+    [0, 1, 2, 3, 5, 6, 7, 8],
+    [1, 2, 4, 7, 8],
+    [3, 4, 7],
+    [3, 4, 5, 6, 8],
+    [4, 5, 7]
+  ]
+  if (startSquare === null || endSquare === null || squares[endSquare]!== null){
+    return false;
+  }
+  if (squares[4] === currPlayer && startSquare !== 4 && movTable[startSquare].includes(endSquare)){ 
+    const nextSquares = squares.slice();
+    nextSquares[startSquare] = squares[endSquare];
+    nextSquares[endSquare] = squares[startSquare];
+    return calculateWinner(nextSquares);
+  }
+  return movTable[startSquare].includes(endSquare);
 }
 
 function calculateWinner(squares) {

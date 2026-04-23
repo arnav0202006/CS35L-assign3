@@ -1,2 +1,14 @@
 1. Considering we start off with our full Tic-Tac-Toe implementation (that also takes care of "time-travel" logic), our first step is to get rid of our Game component and revert to Board being our parent component.
-2. 
+2. Start off by implementing a movableSquare function
+    - First create an adjacency table that clearly indicates where you can move to on the grid depending on the current square you are onClick
+    - Then, check to make sure our current square and target square are not null
+    - Then, check if the current player has their letter on the middle square, and that they are trying to move another piece, then that move can only happen if it creates a board where that player wins
+3. Revert to the states we had in the Tic Tac Toe game (xisNext, setSquares, etc.) and also create a movingSquare set for checking adjacent square movingSquare
+4. Iterate through the grid and count how many squares have "X" and how many have "O"
+5. Now we implement the chorus lapilli version of handleClick
+    - If X already has 3 pieces on the board, clicking an X selects the piece to move, and then clicking a valid movable square moves that piece there
+    - We update the board, and then set the turn to be O's turn now
+    - We implement the exact same logic for O 
+    - If the current square is occupied, nothing happens.
+    - If it's not occupied, then we place that current player's letter there and then update the board, then switch the turn
+6. When dealing with the logic for calculating a winner, we keep the same logic as Tic Tac Toe
