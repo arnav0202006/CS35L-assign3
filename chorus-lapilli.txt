@@ -1,0 +1,2 @@
+1. Considering we start off with our full Tic-Tac-Toe implementation (that also takes care of "time-travel" logic), our first step is to get rid of our Game component and revert to Board being our parent component.
+2. 

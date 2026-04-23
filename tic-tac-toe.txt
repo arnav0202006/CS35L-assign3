@@ -1,0 +1,20 @@
+1. I started off by creating a Square component, with limited functionality of just showing a number
+2. I created a Board component, where I used 3 divs to create the 3 rows, and I used 3 Square components in each rows
+3. I used props for the Square component in order to render values based on what is passed in the Board component
+4. I created a handleClick function in the Square component to log when the squares are clicked
+5. I used the concept of state in order to implement the functionality for a square remembering when it gets clicked, then I removed the prop value
+6. I declared the shared state in the Board component (since it is the parent component), so that the Board can pass that state back down to the children by using the value prop to each Square
+7. I deleted the Square component's state tracking and the onClick functionality, and put the value prop back in 
+8. I utilized the concept of closures in JS to create functions that connect the Board's state to the clicking of a Square component
+9. I used arrow functions in calling handleClick for each Square component
+10. I updated the Board by adding another state to check who's turn it is (X or O) and I updated the handleClick function to change the value of isNext
+11. I fixed the bug where if you click an already filled square, it switches, just by checking if that square is filled already and then returning early 
+12. I added a status section to the Board component to tell which user won, and I implemented that logic using the calculateWinner function.
+13. I added a Game component that handles game history, done by lifting the state up from the Board component to the Game one, similar to how I did that for the Square to Board. Also added some state to the Game component
+14. I added a istory state in Game (an array of board snapshots) and currentMove state 
+15. I made xIsNext depend on currentMove, so turn order is determined from history position.
+16. I changed Board to receive squares, xIsNext, and onPlay as props
+17. I added handlePlay in Game to add a new board snapshot 
+18. I added jumpTo so I can go back to earlier moves
+
+
